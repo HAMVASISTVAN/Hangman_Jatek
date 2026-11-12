@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Akasztófa játék</title>
+    <style>
+    #szo { width: 24ch;
+           font-family: monospace;
+           white-space: pre;  
+         }
+</style>
+</head>
+<body>
+    <h1>Akasztófa játék</h1>
+    <p>Találd ki a gondolt szót!</p>
+    <h2 id="szo">_ _ _ _ _</h2>
+    <label for="betu">Válassz egy betűt:</label>
+    <select id="betu">
+    <option value="">Válassz...</option>
+    <option value="A">A</option>
+    <option value="Á">Á</option>
+    <option value="B">B</option>
+    <option value="C">C</option>
+    <option value="D">D</option>
+    <option value="E">E</option>
+    <option value="É">É</option>
+    <option value="F">F</option>
+    <option value="G">G</option>    
+    <option value="H">H</option>
+    <option value="I">I</option>
+    <option value="Í">Í</option>
+    <option value="J">J</option>
+    <option value="K">K</option>
+    <option value="L">L</option>
+    <option value="M">M</option>
+    <option value="N">N</option>
+    <option value="O">O</option>
+    <option value="Ó">Ó</option>
+    <option value="Ö">Ö</option>
+    <option value="Ő">Ő</option>
+    <option value="P">P</option>
+    <option value="R">R</option>
+    <option value="S">S</option>
+    <option value="T">T</option>
+    <option value="U">U</option>
+    <option value="Ú">Ú</option>
+    <option value="Ü">Ü</option>
+    <option value="Ű">Ű</option>
+    <option value="V">V</option>
+    <option value="Z">Z</option>
+    <option value="Q">Q</option>
+    <option value="W">W</option>
+    <option value="X">X</option>
+    <option value="Y">Y</option>
+    </select>
+    <button id="ellenorzes">Ellenőrzés</button>
+    <p id="uzenet"></p>
+    <p>Hibás próbálkozások: <span id="hibak">0</span></p>
+    <pre id="valasztas"></pre>  <!-- megőrzi a sortöréseket a böngészőben -->
+    <script>
+      let sorszam = 0;
+      // Új játék indítása a szerveren
+      fetch('http://localhost:3000/api/ujjatek')   // böngésző GET kérést küld 
+                                                   // a szerver kiválaszt egy véletlenszerű szót
+                                                   //A gondoltSzo változó megkapja a kiválasztott szót
+            .then(response => response.json())     // feldolgozzuk a szerver JSON-válaszát
+            .then(adat => { console.log(adat);     // eltároljuk a kapott JavaScript-objektumot
+             document.getElementById("hibak").textContent = adat.hibak;
+              // A szó hosszának megfelelő számú aláhúzás megjelenítése
+             document.getElementById("szo").textContent = adat.megjelenitettSzo;
+            });                                      
+  // itt még csak a kitalálandó szó hosszát kapjuk meg + a hibák számát lenullázva                                                 
+      document.getElementById("ellenorzes").addEventListener("click", function() {
+     let betu = document.getElementById("betu").value;
+     if (betu === "") { document.getElementById("uzenet").textContent = "Válassz egy betűt!"; } 
+     else { sorszam++;
+            document.getElementById("valasztas").textContent =  document.getElementById("valasztas").textContent +
+            sorszam + ". választás: " + betu +  "\n";
+            console.log(betu);
+            fetch('http://localhost:3000/api/betu', {                 // elindítunk egy HTTP-kérést a szerver '/api/betu' végpontjára
+                                method: 'POST',                       // megadjuk, hogy POST típusú kérést küldünk
+                                                                      // ez azért fontos, mert a szerveren is POST végpontot hoztunk létre
+                                headers: { 'Content-Type': 'application/json'},
+                                body: JSON.stringify({  betu: betu })
+                               }) // fetch() lánc vége
+                               .then(response => response.json())                
+                               .then(adat => { console.log(adat);
+                                console.log(adat.talalatok);  // a szervertől kapott találatok tömbje
+                               
+                                 // A szervertől kapott üzenet megjelenítése
+                                document.getElementById("uzenet").textContent = adat.uzenet;
+                                document.getElementById("szo").textContent = adat.megjelenitettSzo;
+                                // Ha hibás volt a betű, frissítjük a hibák számát
+                                if (adat.hibak !== undefined) {  document.getElementById("hibak").textContent = adat.hibak; }
+                 });
+         }
+});  // eseménykezelő vége
+   </script>
+</body>
+</html>

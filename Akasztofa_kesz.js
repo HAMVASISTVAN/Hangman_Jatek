@@ -6,7 +6,7 @@ app.use(express.json());  // hogy az Express fel tudja dolgozni a frontendtől �
 // A játékban használható szavak
 const szavak = [
     "ISKOLA",
-    "SZÁMÍTÓGÉP",
+    "SZÁMÍTÓGÉP", 
     "ELEKTRONIKA",
     "PROGRAMOZÁS",
     "VILLAMOS",

@@ -61,7 +61,7 @@
     <script>
       let sorszam = 0;
       // Új játék indítása a szerveren
-      fetch('http://localhost:3000/api/ujjatek')   // böngésző GET kérést küld 
+      fetch('/api/ujjatek')   // böngésző GET kérést küld 
                                                    // a szerver kiválaszt egy véletlenszerű szót
                                                    //A gondoltSzo változó megkapja a kiválasztott szót
             .then(response => response.json())     // feldolgozzuk a szerver JSON-válaszát
@@ -78,7 +78,7 @@
             document.getElementById("valasztas").textContent =  document.getElementById("valasztas").textContent +
             sorszam + ". választás: " + betu +  "\n";
             console.log(betu);
-            fetch('http://localhost:3000/api/betu', {                 // elindítunk egy HTTP-kérést a szerver '/api/betu' végpontjára
+            fetch('/api/betu', {                 // elindítunk egy HTTP-kérést a szerver '/api/betu' végpontjára
                                 method: 'POST',                       // megadjuk, hogy POST típusú kérést küldünk
                                                                       // ez azért fontos, mert a szerveren is POST végpontot hoztunk létre
                                 headers: { 'Content-Type': 'application/json'},

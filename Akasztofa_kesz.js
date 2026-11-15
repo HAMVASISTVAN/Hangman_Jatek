@@ -21,7 +21,7 @@ let poziciok = [];    // üres tömböt hozunk létre, a pozíciók tárolásár
 // A HTML-fájl kiszolgálása
 
 app.get('/', (req, res) => { //ha valaki megnyitja a szerver főoldalát (/), akkor a szerver elküldi neki az Akasztofa.html fájlt
-    res.sendFile(__dirname + '/Akasztofa_Kesz.html');
+    res.sendFile(__dirname + '/Akasztofa_kesz.html');
 });
 // Új játék indítása
 app.get('/api/ujjatek', (req, res) => {
